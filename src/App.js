@@ -1,4 +1,4 @@
-import React, { Component, Fragment, createRef } from 'react';
+import React, { Component, Fragment } from 'react';
 
 const todos = [
   {
@@ -29,9 +29,8 @@ const todos = [
 ];
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.inputRef = createRef();
+  count(todos) {
+    return todos.reduce((a, c) => a + (c.isCompleted ? 0 : 1), 0);
   }
 
   render() {
@@ -39,9 +38,7 @@ class App extends Component {
       <Fragment>
         <div className="container mt-5">
           <div>
-            <h1>
-              Todo ({todos.reduce((a, c) => a + (c.isCompleted ? 0 : 1), 0)})
-            </h1>
+            <h1>Todo ({this.count(todos)})</h1>
           </div>
           <form>
             <div className="form-row align-items-center">
