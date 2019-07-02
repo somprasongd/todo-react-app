@@ -356,3 +356,5 @@ import Employee, {promote} from './employee';
 // Named -> import { ... } from '';
 
 ```
+
+**เรื่องถัดไป** [JSX](https://github.com/somprasongd/todo-react-app/tree/1-jsx)
