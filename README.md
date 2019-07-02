@@ -158,6 +158,4 @@ render() {
 
 **เรื่องถัดไป** [Handling Events](https://github.com/somprasongd/todo-react-app/tree/2-events)
 
-**เรื่องก่อนหน้า** [JSX](https://github.com/somprasongd/todo-react-app/tree/1-jsx)
-
 **[หน้าแรก](https://github.com/somprasongd/todo-react-app/tree/1-jsx)**
