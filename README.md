@@ -55,7 +55,7 @@ render() {
 ใน JSX สามารถใส่ตัวแปร หรือ expression ลงไปได้ เพื่อแสดงค่า หรือเรียกใช้งานฟังก์ชัน
 
 ```jsx
-const name = 'Josh Perez';
+const name = 'Ball';
 const element = <h1>Hello, {name}</h1>;
 
 // or
@@ -140,14 +140,18 @@ render() {
 
 ## CSS in React
 
-- Inline style ใส่ลงไปตรงๆ หรือใส่ตัวแปรไปก็ได้ `<h1 style={object}}…></h1>` เช่น
+- Inline style ใส่ลงไปตรงๆ หรือใส่ตัวแปรไปก็ได้ `<h1 style={object}}…></h1>` โดยถ้า HTML เป็น `font-size` ต้องเปลี่ยนเป็น `fontSize` เช่น
 
 ```jsx
-<h1 style={{ color: 'green', finSize: '50px' }}>CSS in React</h1>;
+render() {
+  return <h1 style={{ color: 'green', fontSize: '50px' }}>CSS in React</h1>;
+}
 
 // or
-const headingStyle = { color: 'green', finSize: '50px' };
-<h1 style={headingStyle}>CSS in React</h1>;
+render() {
+  const headingStyle = { color: 'green', fontSize: '50px' };
+  return <h1 style={headingStyle}>CSS in React</h1>;
+}
 ```
 
 - CSS file: สร้างเป็นไฟล์ .css แล้ว import './file.css'; ใน Component นั้นๆ
