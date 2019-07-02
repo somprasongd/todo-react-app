@@ -1,358 +1,153 @@
-# Todo React App
+# JSX
 
-**Update date:** 02 July 2019
+```jsx
+const element = <h1>Hello, world!</h1>;
 
-การเขียน Web โดยใช้ React version 16.8.6
-
-## Table of Contents
-
-### # [Development Tools](https://github.com/somprasongd/todo-react-app#development-tools)
-
-### # [ES6 Refresher](https://github.com/somprasongd/todo-react-app#es6-refresher)
-
-### # [JSX](https://github.com/somprasongd/todo-react-app/tree/1-jsx)
-
-### # [Handling Events](https://github.com/somprasongd/todo-react-app/tree/2-events)
-
-### # [Components](https://github.com/somprasongd/todo-react-app/tree/3-components)
-
-### # [Lifecycle](https://github.com/somprasongd/todo-react-app/tree/4-lifecycle)
-
-### # [HTTP Requests](https://github.com/somprasongd/todo-react-app/tree/5-http-requests)
-
-### # [Router](https://github.com/somprasongd/todo-react-app/tree/6-router)
-
-### # [Context API](https://github.com/somprasongd/todo-react-app/tree/7-context)
-
-### # [Hooks](https://github.com/somprasongd/todo-react-app/tree/8-hooks)
-
-## Development Tools
-
-- ติดตั้ง Nodejs version 10.16
-- ติดตั้ง create-react-app cli `npm i -g create-react-app@3.0.1`
-- ติดตั้ง VS Code และลง Extensions
-  - ES7 React/Redux/GraphQL/React-Native snippets
-  - Prettier
-  - Bracket Pair Colorizer
-- ติดตั้ง Google Chrome Extensions
-  - React Developer Tools
-  - Redux DevTools
-
-## ES6 Refresher
-
-### 1. Let/Const
-
-var เป็น function scope ส่วน let, const เป็น block scope ต่างที่ const เป็นค่าคงที่กำหนดค่าใหม่ได้ แต่ถ้าเป็น object จะสามารถเปลี่ยนแปลงค่าข้างใน object ได้
-
-### 2. Objects
-
-```js
-// การสร้าง object ES6
-const person = {
-  name: 'Ball',
-  talk() {} // ย่อ function
-};
-// การเรียกใช้งาน
-person.talk();
-person.name = '';
-// หรือ
-person['name'] = '';
+ReactDOM.render(element, document.getElementById('root'));
 ```
 
-### 3. The this Keyword
+**JSX syntax** จะดูเหมือน HTML โดยสามารถเอา HTML มาใช้ได้เลย แต่จะ มี attribute HTML บางตัวได้ที่ไม่สามารถใช้ได้ เช่น `class`, `for` โดยจะต้องเปลี่ยนเป็น `className` และ `htmlFor` ตามลำดับ
 
-ใน JavaScript this จะมักมีปัญหาในการใช้งานอยู่เป็นประจำ เพราะว่าค่าของ this จะเปลี่ยนไปตามตัวที่เรียกมัน เช่น
+```jsx
+render() {
+  return (
+    <form>
+      <div className="form-row align-items-center">
+        <div className="col">
+          <label className="sr-only" htmlFor="inlineFormInput">
+            Task
+          </label>
+          <input
+            type="text"
+            className="form-control mb-2"
+            id="inlineFormInput"
+            placeholder="What needs to be done?"
+          />
+        </div>
+        <div className="col-auto">
+          <button type="submit" className="btn btn-primary mb-2">
+            <i className="fas fa-plus" />
+          </button>
+        </div>
+      </div>
+    </form>
+);
+}
+```
 
-```js
-const person = {
-  name: 'Ball',
-  talk() {
-    console.log(this);
+โดย render() สามารถ return ได้แค่ root element เดียวเท่านั้น โดยใช้ `<div></div>` หรือ `<React.Fragment></React.Fragment>` หรือ `<></>` มาครอบ
+
+ซึ่งถ้าใช้ `<React.Fragment></React.Fragment>` หรือ `<></>` ตอนที่แสดงใน DOM จริงๆ จะไม่มี `<></>` แสดงออกมา
+
+```jsx
+render() {
+  return (
+    <>
+      <h1>Hello world!</h1>
+      <h2>From React</h2>
+    </>
+  );
+}
+```
+
+## สามารถใส่ Javascript Expression ได้
+
+ใน JSX สามารถใส่ตัวแปร หรือ expression ลงไปได้ เพื่อแสดงค่า หรือเรียกใช้งานฟังก์ชัน
+
+```jsx
+const name = 'Josh Perez';
+const element = <h1>Hello, {name}</h1>;
+
+// or
+const element = <h1>2 + 2 = {2 + 2}</h1>;
+
+// or
+function sum(x, y) {
+  return x + y;
+}
+
+const element = <h1>2 + 2 = {sum(2, 2)}</h1>;
+```
+
+## เงื่อนไขใน JSX
+
+การใช้เงื่อนไขเพื่อแสดงข้อมูลใน JSX สามารถทำได้หลายวิธี เช่น ใช้้ if-else หรือ Ternary Operator (`condition ? exprIfTrue : exprIfFalse`) หรือ Logical && Operator (`isTrue && <p>Show this</p>`) โดยจะเขียนแทรกลงไปใน JSX เลย หรือจะเขียนเป็นฟังก์ชันแยกไปให้คืนค่า JSX กลับมาก็ได้
+
+```jsx
+// if-else
+const Hello = props => {
+  const { name } = props;
+  let element;
+
+  if (name) {
+    element = <h1>Hello , {name}</h1>;
+  } else {
+    element = <h1>No name</h1>;
   }
+
+  return <div>{button}</div>;
 };
-person.talk(); // {name: 'Ball', talk: f} เพราะ object เรียก function
-const talk = person.talk;
-talk(); // undefine เพราะ global object เป็นตัวเรียก
+
+// Ternary Operator
+const Hello = props => {
+  const { name } = props;
+
+  return <div>{name ? <h1>Hello , {name}</h1> : <h1>No name</h1>}</div>;
+};
+
+// Logical && Operator
+const Hello = props => {
+  const { name } = props;
+
+  return (
+    <div>
+      {name && <h1>Hello , {name}</h1>}
+      {!name && <h1>No name</h1>}
+    </div>
+  );
+};
 ```
 
-แก้โดยใช้การ binding
+## ลูปใน JSX
 
-```js
-const person = {
-  name: 'Ball',
-  talk() {
-    console.log(this);
+ใน JSX ถ้าต้องการวนลูปเพื่อแสดงข้อมูลแบบเดียวกันหลายๆ อัน ให้ใช้ `map()`
+
+```jsx
+// ตัวอย่างข้อมูล
+const todos = [
+  {
+    id: '1',
+    text: 'Learn React Basic',
+    isCompleted: true
+  },
+  {
+    id: '2',
+    text: 'Use class component',
+    isCompleted: false
+  },
+  {
+    id: '3',
+    text: 'make HTTP request',
+    isCompleted: false
   }
-};
-person.talk();
-// ใช้ bind เพื่อบอกว่าให้ใช้ person เป็นตัวเรียก function
-const talk = person.talk.bind(person);
-talk(); // {name: 'Ball', talk: f}
-```
-
-### 4. Arrow Functions
-
-```js
-const square = function(number) {
-  return number * number;
-};
-// แปลงให้เป็น arrow function
-const square = number => {
-  return number * number;
-};
-// สามารถเขียนให้สั้นลงได้
-const square = number => number * number;
-// การนำไปใช้งานอื่นๆ
-const jobs = [
-  { id: 1, isActive: true },
-  { id: 2, isActive: true },
-  { id: 3, isActive: false }
 ];
-// แบบปกติ
-let activeJobs = jobs.filter(function(job) {
-  return job.isActive;
-});
-// ถ้าใช้ arrow function จะสั้นลง และดูง่ายขึ้น
-activeJobs = jobs.filter(job => job.isActive);
-```
 
-#### arrow function กับ this
-
-```js
-const person = {
-  name: 'Ball',
-  talk() {
-    setTimeout(function() {
-      console.log(this);
-    }, 1000);
-  }
-};
-person.talk(); // this จะได้ global object
-// วิธีแก้แบบเดิมๆ
-const person = {
-  name: 'Ball',
-  talk() {
-    const self = this;
-    setTimeout(function() {
-      console.log(self);
-    }, 1000);
-  }
-};
-person.talk(); // this จะได้ person object
-// วิธีแก้โดยใช้ arrow function
-const person = {
-  name: 'Ball',
-  talk() {
-    setTimeout(() => {
-      console.log(this);
-    }, 1000);
-  }
-};
-person.talk(); // this จะได้ person object
-// เพราะว่า arrow function จะสืบทอด this จะ function ที่ครอบมันอยู่ให้เอง
-```
-
-### 5. Array Method
-
-- map() ใช้แปลง array ได้ array กลับมาจำนวนเท่าเดิม
-
-```js
-const colors = ['red', 'green', 'blue'];
-const items = colors.map(color => '<li>' + color + '</li>');
-// ใช้ template literal
-const items = colors.map(color => `<li>${color}</li>`);
-```
-
-- filter() ใช้กรอง array ได้ array กลับจำนวนน้อยกว่าเดิม
-- reduce() ใช้แปลง array ได้ออกมาเป็นค่าเดียว
-
-### 6. Destructuring
-
-- Object
-
-```js
-const address = {
-  street: '',
-  city: '',
-  country: ''
-};
-// ถ้าต้องการถึงค่าใน object ออกมาจากเดิมทำแบบนี้
-const street = address.street;
-const city = address.city;
-const country = address.country;
-// ES6
-const { street, city, country } = address;
-// สามารถเปลี่ยนชื่อได้
-const { street: st } = address;
-```
-
-- Array
-
-```js
-const colors = ['red', 'green', 'blue'];
-const [red, green, blue] = colors;
-```
-
-### 7. Spread Operator
-
-- Object
-
-```js
-const first = { name: 'Ball' };
-const second = { city: 'Phuket' };
-const combined = { ...first, ...second };
-const clone = { ...first };
-```
-
-- Array
-
-```js
-const first = [1, 2, 3];
-const second = [4, 5, 6];
-// แบบเดิม
-const combined = first.concat(second);
-// ES6
-const combined = [...first, ...second];
-// สามารถเพิ่ม element ตรงไหนก็ได้
-const combined = [...first, 9, ...second, 10];
-// หรือใช้ clone array ก็ได้
-const clone = [...first];
-```
-
-### 8. Classes
-
-```js
-// เดิมถ้าต้องการสร้าง 2 object
-const person = {
-  name: 'Ball',
-  talk() {
-    console.log('talk');
-  }
-};
-const person2 = {
-  name: 'Pu',
-  talk() {
-    console.log('talk');
-  }
-};
-// ES6 สามารถสร้าง class เป็นเหมือน blueprint ไว้ได้
-class Person {
-  constructor(name) {
-    this.name = name;
-  }
-  talk() {
-    console.log('talk');
-  }
-}
-const person = new Person('Ball');
-const person2 = new Person('Pu');
-```
-
-#### Inheritance
-
-```js
-class Person {
-  constructor(name) {
-    this.name = name;
-  }
-talk() {
-    console.log('talk');
-  }
-}
-// ถ้าสร้าง class ใหม่แต่อยากได้คุณสมบัติของ Person ด้วย
-class Employee extend Person {
-  constructor(name, position) {
-    super(name);
-    this.position = position;
-  }
-  work() {
-    console.log('work');
-  }
-}
-const employee = new Employee('Stamp', 'Dev');
-employee.talk();
-```
-
-### 9. Modules
-
-บางทีเขียนโค้ดในไฟล์ๆ เดียวแล้วมันดูแลยาก เราเลยอยากแยกออกไปอีกไฟล์ทำได้โดยสร้างเป็น module
-
-#### person.js
-
-```js
-// ใช้ export เพื่อให้ไฟล์อื่นเรียกใช้งานได้
-export class Person {
-  constructor(name) {
-    this.name = name;
-  }
-  talk() {
-    console.log('talk');
-  }
+// การวนลูปใน render
+render() {
+  return <div>{todos.map(todo => todo.text)}</div>;
 }
 ```
 
-#### employee.js
+## CSS in React
 
-```js
-// จะใช้งานไฟล์ไหน ต้อง import มาก่อน
-import { Person } from './person';
-export class Employee extend Person {
-  constructor(name, position) {
-    super(name);
-    this.position = position;
-  }
-  work() {
-    console.log('work');
-  }
-}
+- Inline style ใส่ลงไปตรงๆ หรือใส่ตัวแปรไปก็ได้ `<h1 style={object}}…></h1>` เช่น
+
+```jsx
+<h1 style={{ color: 'green', finSize: '50px' }}>CSS in React</h1>;
+
+// or
+const headingStyle = { color: 'green', finSize: '50px' };
+<h1 style={headingStyle}>CSS in React</h1>;
 ```
 
-#### index.js
-
-```js
-import { Employee } from './employee';
-const employee = new Employee('Stamp', 'Dev');
-employee.talk();
-```
-
-### Named & Default Exports
-
-```js
-// employee.js
-import { Person } from './person';
-export function promote() {}
-export class Employee extend Person {
-  constructor(name, position) {
-    super(name);
-    this.position = position;
-  }
-  work() {
-    console.log('work');
-  }
-}
-
-// index.js
-import {Employee, promote} from './employee';
-// แต่ถ้าต้องการใช้ class Employee แต่ default ทำได้โดย
-
-// employee.js
-import { Person } from './person';
-export function promote() {}
-export default class Employee extend Person {
-  constructor(name, position) {
-    super(name);
-    this.position = position;
-  }
-  work() {
-    console.log('work');
-  }
-}
-
-// index.js ต้องเปลี่ยนวิธี import
-import Employee, {promote} from './employee';
-
-// สรุป
-// Default -> import ... from '';
-// Named -> import { ... } from '';
-
-```
+- CSS file: สร้างเป็นไฟล์ .css แล้ว import './file.css'; ใน Component นั้นๆ
