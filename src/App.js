@@ -1,4 +1,7 @@
-import React, { Component, Fragment, createRef } from 'react';
+import React, { Component, createRef } from 'react';
+import Title from './components/Title';
+import TodoForm from './components/TodoForm';
+import TodoList from './components/TodoList';
 
 const todos = [
   {
@@ -32,7 +35,6 @@ class App extends Component {
   constructor() {
     super();
     this.state = { todos };
-    this.textInput = createRef();
     this.idRef = createRef();
     this.idRef.current = 6;
   }
@@ -42,10 +44,7 @@ class App extends Component {
   }
 
   // Add todo handler
-  handleAdd = e => {
-    e.preventDefault();
-
-    const text = this.textInput.current.value;
+  handleAdd = text => {
     if (text.length === 0) return;
 
     const id = '' + this.idRef.current++;
@@ -60,8 +59,6 @@ class App extends Component {
     const todos = [...this.state.todos, todo];
     // Update state
     this.setState({ todos });
-    // Clear input value
-    this.textInput.current.value = '';
   };
 
   // Handle remove
@@ -88,62 +85,18 @@ class App extends Component {
   };
 
   render() {
+    const { todos } = this.state;
+    const countUncompleted = this.count(todos);
     return (
-      <Fragment>
-        <div className="container mt-5">
-          <div>
-            <h1>Todo ({this.count(this.state.todos)})</h1>
-          </div>
-          <form onSubmit={this.handleAdd}>
-            <div className="form-row align-items-center">
-              <div className="col">
-                <label className="sr-only" htmlFor="inlineFormInput">
-                  Task
-                </label>
-                <input
-                  type="text"
-                  ref={this.textInput}
-                  className="form-control mb-2"
-                  id="inlineFormInput"
-                  placeholder="What needs to be done?"
-                />
-              </div>
-              <div className="col-auto">
-                <button type="submit" className="btn btn-primary mb-2">
-                  <i className="fas fa-plus" />
-                </button>
-              </div>
-            </div>
-          </form>
-          {this.state.todos.length === 0 ? (
-            <p className="text-center">No task.</p>
-          ) : (
-            <ul className="list-group">
-              {this.state.todos.map(todo => (
-                <li
-                  key={todo.id}
-                  className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                >
-                  <div
-                    style={{
-                      textDecoration: todo.isCompleted ? 'line-through' : null
-                    }}
-                    onClick={e => this.handleToggleComplete(todo.id)}
-                  >
-                    {todo.text}
-                  </div>
-                  <button
-                    className="btn btn-danger"
-                    onClick={e => this.handleRemove(todo.id)}
-                  >
-                    <i className="fas fa-minus-circle" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </Fragment>
+      <div className="container mt-5">
+        <Title count={countUncompleted} />
+        <TodoForm onAdd={this.handleAdd} />
+        <TodoList
+          todos={todos}
+          onToggle={this.handleToggleComplete}
+          onDelete={this.handleRemove}
+        />
+      </div>
     );
   }
 }
