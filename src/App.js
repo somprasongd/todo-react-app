@@ -2,6 +2,7 @@ import React, { Component, createRef } from 'react';
 import Title from './components/Title';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
+import Clock from './components/Clock';
 
 const todos = [
   {
@@ -34,7 +35,7 @@ const todos = [
 class App extends Component {
   constructor() {
     super();
-    this.state = { todos };
+    this.state = { todos, isShowTime: true };
     this.idRef = createRef();
     this.idRef.current = 6;
   }
@@ -85,7 +86,7 @@ class App extends Component {
   };
 
   render() {
-    const { todos } = this.state;
+    const { todos, isShowTime } = this.state;
     const countUncompleted = this.count(todos);
     return (
       <div className="container mt-5">
@@ -96,6 +97,15 @@ class App extends Component {
           onToggle={this.handleToggleComplete}
           onDelete={this.handleRemove}
         />
+        <div className="m-2">
+          {isShowTime && <Clock />}
+          <button
+            className="btn btn-info"
+            onClick={e => this.setState({ isShowTime: !isShowTime })}
+          >
+            {isShowTime ? 'Hide' : 'Show'}
+          </button>
+        </div>
       </div>
     );
   }

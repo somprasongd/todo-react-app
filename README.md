@@ -1,49 +1,59 @@
-# Components and Props
+# Component Lifecycle
 
-React มี components 2 แบบ คือ Class Components กับ Function Components ต่างกันคือ
+ในแต่ละ Class Components จะมี lifecycles ที่ใช้หลักๆ ตามรูปด้านล่าง
 
-- **Class Components:** จะมี state และ life cycle
+![Lifecycle (React version ^16.4](./resources/lifecycles.PNG)
+
+ตัวที่น่าสนใจ คือ
+
+- **componentDidMount:** จะเรียกหลัง render แค่ครั้งแรกครั้งเดียวเท่านั้น
+
+  - เรียก APIs กำหนดค่าเริ่มต้นให้กับ state
+  - subscript การทำงานบางอย่าง
+
+- **componentDidUpdate:** ซึ่งทุกครั้งที่ค่า state หรือ props มีการเปลี่ยนแปลง จะมีการ render ใหม่ แล้วจะเรียกมาที่ `componentDidUpdate`
+
+  - เรียก APIs ตามข้อมูลของ state หรือ props ที่เปลี่ยนไป เช่น แสดงรายละเอียดสินค้าตาม productId ที่ถูกเลือก
+
+- **componentWillUnmount:** จะถูกเรียกก่อนที่ components นั้นจะถูก unmount ออกไป
+  - ใช้เคลียร์ค่า หรือ unsubscript
+
+## ตัวอย่าง
+
+Components แสดงเวลา โดยเวลาจะเปลี่ยนการแสดงผลทุกๆ 1 วินาที โดยจะใช้ setInterval เป็นตัวอัพเดทค่าใน state ซึ่งถ้า component ถูก unmount ไปแล้วตัว setInterval ก็ยังทำงานอยู่ ถ้าเปิดมาใหม่ก็จะมี setInterval ตัวใหม่ทำงานเพิ่มขึ้นมาอีก ดังนั้นก่อนจะ unmount ไปต้องยกเลิกการทำงานของ setInterval โดยใช้ `componentWillUnmount`
 
 ```jsx
-class Welcome extends React.Component {
+class Clock extends React.Component {
+  state = { date: new Date() };
+
+  componentDidMount() {
+    this.timerID = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
   render() {
-    return <h1>Hello, {this.props.name}</h1>;
+    return (
+      <div>
+        <h2>Time is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
   }
 }
+
+ReactDOM.render(<Clock />, document.getElementById('root'));
 ```
 
-- **Function Components:** จะไม่มี state และ life cycle โดยตัวมันจะ return jsx element เพื่อ render เท่านั้น ซึ่งถ้าต้องการส่งค่าไปให้ function component ไว้ render ต้องส่งกับ props เท่านั้น ที่สำคัญ **props นั้น read only!!!**
+**เรื่องถัดไป** [HTTP Requests](https://github.com/somprasongd/todo-react-app/tree/5-http-requests)
 
-```jsx
-function Welcome(props) {
-  return <h1>Hello, {props.name}</h1>;
-}
-```
-
-## Composing Components
-
-Components 1 ตัว สามารถอ้างถึง components อื่นๆ ได้ เพื่อเอามา render ในตัวมันเอง เช่น
-
-```jsx
-function Welcome(props) {
-  return <h1>Hello, {props.name}</h1>;
-}
-
-function App() {
-  return (
-    <div>
-      <Welcome name="Sara" />
-      <Welcome name="Cahal" />
-      <Welcome name="Edite" />
-    </div>
-  );
-}
-
-ReactDOM.render(<App />, document.getElementById('root'));
-```
-
-**เรื่องถัดไป** [Life Cycle](https://github.com/somprasongd/todo-react-app/tree/4-lifecycle)
-
-**เรื่องก่อนหน้า** [JSX](https://github.com/somprasongd/todo-react-app/tree/2-events)
+**เรื่องก่อนหน้า** [JSX](https://github.com/somprasongd/todo-react-app/tree/3-components)
 
 **[หน้าแรก](https://github.com/somprasongd/todo-react-app)**
