@@ -54,6 +54,6 @@ ReactDOM.render(<Clock />, document.getElementById('root'));
 
 **เรื่องถัดไป** [HTTP Requests](https://github.com/somprasongd/todo-react-app/tree/5-http-requests)
 
-**เรื่องก่อนหน้า** [JSX](https://github.com/somprasongd/todo-react-app/tree/3-components)
+**เรื่องก่อนหน้า** [Components and Props](https://github.com/somprasongd/todo-react-app/tree/3-components)
 
 **[หน้าแรก](https://github.com/somprasongd/todo-react-app)**
