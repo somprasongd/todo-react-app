@@ -1,161 +1,275 @@
-# JSX
+# State & Handling Events
+
+## State
+
+ก่อนอื่นต้องทำความรู้จักกับ state ก่อน ซึ่ง state ก็คือตัวที่เก็บค่า state ภายใน **class component** นั้น ซึ่งถ้าค่าของ state เปลี่ยน React ก็จะทำการ render หน้าใหม่ทั้งหมด แต่ React จะทำอยู่ใน Virtual DOM(ใน memory) ก่อน และจะเอาส่วนที่เปลี่ยนแปลงเท่านั้นไปอัพเดทใน HTML DOM อีกทีหนึ่ง
+
+### วิธีการสร้าง state
 
 ```jsx
-const element = <h1>Hello, world!</h1>;
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 }; // กำหนดค่าเริ่มต้น
+  }
+}
 
-ReactDOM.render(element, document.getElementById('root'));
+// or
+
+class Counter extends Component {
+  state = { count: 0 }; // กำหนดค่าเริ่มต้น
+}
 ```
 
-**JSX syntax** จะดูเหมือน HTML โดยสามารถเอา HTML มาใช้ได้เลย แต่จะ มี attribute HTML บางตัวได้ที่ไม่สามารถใช้ได้ เช่น `class`, `for` โดยจะต้องเปลี่ยนเป็น `className` และ `htmlFor` ตามลำดับ
+### การอัพเดทค่าใน state
+
+แต่ state ไม่สามารถเปลี่ยนแปลงค่าได้ตรงๆ ต้องทำผ่าน `setState()`
+
+```js
+increment() {
+  this.setState({
+    count: (this.state.count += 1)
+  });
+}
+```
+
+แต่ต้องระวังเพราะ setState เป็น asynchronous ถ้าต้องการอัพเดทค่าใหม่โดยใช้ค่าเดิมด้วย ต้องป้องกันปัญหานี้ได้โดย
+
+```js
+increment() {
+  this.setState((previousState, currentProps) => {
+    return {
+      count: (previousState.count + 1)
+    }
+  });
+}
+```
+
+## Handling Events
+
+คล้ายกับการจัดการ event ของ DOM elements เพียงแค่เปลี่ยนชื่อเป็น camel case เช่น
+
+```js
+// HTML
+<button onclick="increment()">+</button>
+
+// JSX
+<button onClick={this.increment}>+</button>
+```
+
+### วิธีการสร้างฟังก์ชันจัดการ event
+
+ถ้าสร้างฟังก์ชันแบบปกติใน class จะไม่สามารถเรียกใช้งาน this ได้ เช่น
 
 ```jsx
-render() {
-  return (
-    <form>
-      <div className="form-row align-items-center">
-        <div className="col">
-          <label className="sr-only" htmlFor="inlineFormInput">
-            Task
-          </label>
-          <input
-            type="text"
-            className="form-control mb-2"
-            id="inlineFormInput"
-            placeholder="What needs to be done?"
-          />
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+  increment() {
+    this.setState({
+      count: (this.state.count += 1)
+    });
+  }
+  decrement() {
+    this.setState({
+      count: (this.state.count -= 1)
+    });
+  }
+  render() {
+    return (
+      <>
+        <h2>{this.state.count}</h2>
+        <div>
+          <button onClick={this.increment}>+</button>
+          <button onClick={this.decrement}>-</button>
         </div>
-        <div className="col-auto">
-          <button type="submit" className="btn btn-primary mb-2">
-            <i className="fas fa-plus" />
-          </button>
+      </>
+    );
+  }
+}
+```
+
+แบบนี้จะไม่สามารถเรียกใช้ `this.state` ได้ ต้องทำแบบนี้
+
+1.ใช้ `bind()` ใน render
+
+```jsx
+class Counter extends React.Component {
+  ...
+  render() {
+    return (
+      <>
+        <h2>{this.state.count}</h2>
+        <div>
+          <button onClick={this.increment.bind(this)}>+</button>
+          <button onClick={this.decrement.bind(this)}>-</button>
         </div>
+      </>
+    );
+  }
+}
+```
+
+2.ใช้ `bind()` ใน constructor
+
+```jsx
+class Counter extends React.Component {
+
+  increment(n) {
+    this.setState({
+      count: (this.state.count += n)
+    });
+  }
+  decrement(n) {
+    this.setState({
+      count: (this.state.count -= n)
+    });
+  }
+
+  render() {
+    return (
+      ...
+          <button onClick={this.increment}>+</button>
+          <button onClick={this.decrement}>-</button>
+      ...
+    );
+  }
+}
+```
+
+3.ใช้ Arrow function ใน render
+
+```jsx
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+  ...
+  render() {
+    return (
+      ...
+          <button onClick={e => this.increment(e)}>+</button>
+          <button onClick={e => this.decrement(e)}>-</button>
+      ...
+    );
+  }
+}
+```
+
+4.ใช้ Arrow function ใน Class property
+
+```jsx
+class Counter extends React.Component {
+  constructor(props) {
+    ...
+  }
+  increment = () => {
+    ...
+  }
+  decrement = () => {
+    ...
+  }
+  render() {
+    return (
+      ...
+          <button onClick={this.increment}>+</button>
+          <button onClick={this.decrement}>-</button>
+      ...
+    );
+  }
+}
+```
+
+ถ้าต้องการ**ส่ง parameters** ไปให้ฟังก์ชันด้วยให้ใช้วิธีที่ **"3.ใช้ Arrow function ใน render"** เช่น
+
+```jsx
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+  ...
+  render() {
+    return (
+      ...
+          <button onClick={e => this.increment(5)}>+</button>
+          <button onClick={e => this.decrement(3)}>-</button>
+      ...
+    );
+  }
+}
+```
+
+## Refs
+
+สามารถเอา Refs ไปผูกไว้กับ DOM element ได้
+
+### การสร้าง Refs
+
+```jsx
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();
+  }
+  render() {
+    return <div ref={this.myRef} />;
+  }
+}
+```
+
+### การเข้าถึง Refs
+
+```jsx
+const node = this.myRef.current;
+```
+
+### ตัวอย่างการใช้งาน
+
+```jsx
+class CustomTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    // create a ref to store the textInput DOM element
+    this.textInput = React.createRef();
+    this.focusTextInput = this.focusTextInput.bind(this);
+  }
+
+  focusTextInput() {
+    // Explicitly focus the text input using the raw DOM API
+    // Note: we're accessing "current" to get the DOM node
+    this.textInput.current.focus();
+  }
+
+  render() {
+    // tell React that we want to associate the <input> ref
+    // with the `textInput` that we created in the constructor
+    return (
+      <div>
+        <input type="text" ref={this.textInput} />
+
+        <input
+          type="button"
+          value="Focus the text input"
+          onClick={this.focusTextInput}
+        />
       </div>
-    </form>
-);
-}
-```
-
-โดย render() สามารถ return ได้แค่ root element เดียวเท่านั้น โดยใช้ `<div></div>` หรือ `<React.Fragment></React.Fragment>` หรือ `<></>` มาครอบ
-
-ซึ่งถ้าใช้ `<React.Fragment></React.Fragment>` หรือ `<></>` ตอนที่แสดงใน DOM จริงๆ จะไม่มี `<></>` แสดงออกมา
-
-```jsx
-render() {
-  return (
-    <>
-      <h1>Hello world!</h1>
-      <h2>From React</h2>
-    </>
-  );
-}
-```
-
-## สามารถใส่ Javascript Expression ได้
-
-ใน JSX สามารถใส่ตัวแปร หรือ expression ลงไปได้ เพื่อแสดงค่า หรือเรียกใช้งานฟังก์ชัน
-
-```jsx
-const name = 'Ball';
-const element = <h1>Hello, {name}</h1>;
-
-// or
-const element = <h1>2 + 2 = {2 + 2}</h1>;
-
-// or
-function sum(x, y) {
-  return x + y;
-}
-
-const element = <h1>2 + 2 = {sum(2, 2)}</h1>;
-```
-
-## เงื่อนไขใน JSX
-
-การใช้เงื่อนไขเพื่อแสดงข้อมูลใน JSX สามารถทำได้หลายวิธี เช่น ใช้้ if-else หรือ Ternary Operator (`condition ? exprIfTrue : exprIfFalse`) หรือ Logical && Operator (`isTrue && <p>Show this</p>`) โดยจะเขียนแทรกลงไปใน JSX เลย หรือจะเขียนเป็นฟังก์ชันแยกไปให้คืนค่า JSX กลับมาก็ได้
-
-```jsx
-// if-else
-const Hello = props => {
-  const { name } = props;
-  let element;
-
-  if (name) {
-    element = <h1>Hello , {name}</h1>;
-  } else {
-    element = <h1>No name</h1>;
+    );
   }
-
-  return <div>{button}</div>;
-};
-
-// Ternary Operator
-const Hello = props => {
-  const { name } = props;
-
-  return <div>{name ? <h1>Hello , {name}</h1> : <h1>No name</h1>}</div>;
-};
-
-// Logical && Operator
-const Hello = props => {
-  const { name } = props;
-
-  return (
-    <div>
-      {name && <h1>Hello , {name}</h1>}
-      {!name && <h1>No name</h1>}
-    </div>
-  );
-};
-```
-
-## ลูปใน JSX
-
-ใน JSX ถ้าต้องการวนลูปเพื่อแสดงข้อมูลแบบเดียวกันหลายๆ อัน ให้ใช้ `map()` โดยในแต่ละ element ต้องมี attribute `key` ซึ่งต้องใส่ค่า unique ด้วย
-
-```jsx
-// ตัวอย่างข้อมูล
-const todos = [
-  {
-    id: '1',
-    text: 'Learn React Basic',
-    isCompleted: true
-  },
-  {
-    id: '2',
-    text: 'Use class component',
-    isCompleted: false
-  },
-  {
-    id: '3',
-    text: 'make HTTP request',
-    isCompleted: false
-  }
-];
-
-// การวนลูปใน render
-render() {
-  return <div>{todos.map(todo => <p key={todo.id}>{todo.text}</p>)}</div>;
 }
 ```
 
-## CSS in React
+**เรื่องถัดไป** [Components](https://github.com/somprasongd/todo-react-app/tree/3-components)
 
-- Inline style ใส่ลงไปตรงๆ หรือใส่ตัวแปรไปก็ได้ `<h1 style={object}}…></h1>` โดยถ้า HTML เป็น `font-size` ต้องเปลี่ยนเป็น `fontSize` เช่น
-
-```jsx
-render() {
-  return <h1 style={{ color: 'green', fontSize: '50px' }}>CSS in React</h1>;
-}
-
-// or
-render() {
-  const headingStyle = { color: 'green', fontSize: '50px' };
-  return <h1 style={headingStyle}>CSS in React</h1>;
-}
-```
-
-- CSS file: สร้างเป็นไฟล์ .css แล้ว import './file.css'; ใน Component นั้นๆ
-
-**เรื่องถัดไป** [Handling Events](https://github.com/somprasongd/todo-react-app/tree/2-events)
+**เรื่องก่อนหน้า** [JSX](https://github.com/somprasongd/todo-react-app/tree/1-jsx)
 
 **[หน้าแรก](https://github.com/somprasongd/todo-react-app)**
