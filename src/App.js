@@ -1,43 +1,24 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
+import axios from 'axios';
 import Title from './components/Title';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 import Clock from './components/Clock';
-
-const todos = [
-  {
-    id: '1',
-    text: 'Learn React Basic',
-    isCompleted: true
-  },
-  {
-    id: '2',
-    text: 'Use class component',
-    isCompleted: false
-  },
-  {
-    id: '3',
-    text: 'make HTTP request',
-    isCompleted: false
-  },
-  {
-    id: '4',
-    text: 'Use Context API',
-    isCompleted: false
-  },
-  {
-    id: '5',
-    text: 'Use React Hooks',
-    isCompleted: false
-  }
-];
-
 class App extends Component {
   constructor() {
     super();
-    this.state = { todos, isShowTime: true };
-    this.idRef = createRef();
-    this.idRef.current = 6;
+    // Set initial state
+    this.state = { todos: [], isShowTime: false };
+    this.apiUrl = 'https://5d1ac8b7dd81710014e87e54.mockapi.io/api/todos';
+  }
+
+  // Lifecycle method
+  componentDidMount() {
+    // Make HTTP reques with Axios
+    axios.get(this.apiUrl).then(res => {
+      // Set state with result
+      this.setState({ todos: res.data });
+    });
   }
 
   count(todos) {
@@ -48,18 +29,20 @@ class App extends Component {
   handleAdd = text => {
     if (text.length === 0) return;
 
-    const id = '' + this.idRef.current++;
-
     // Assemble data
     const todo = {
-      id,
       text,
       isCompleted: false
     };
-    // Clone & Update data
-    const todos = [...this.state.todos, todo];
+
     // Update state
-    this.setState({ todos });
+    axios.post(this.apiUrl, todo).then(res => {
+      // Clone & Update data
+      const todos = [...this.state.todos];
+      todos.push(res.data);
+
+      this.setState({ todos });
+    });
   };
 
   // Handle remove
@@ -67,7 +50,9 @@ class App extends Component {
     // Filter all todos except the one to be removed
     const remainder = this.state.todos.filter(todo => todo.id !== id);
     // Update state with filter
-    this.setState({ todos: remainder });
+    axios.delete(`${this.apiUrl}/${id}`).then(res => {
+      this.setState({ todos: remainder });
+    });
   };
 
   // Handle toggle complete
@@ -75,14 +60,14 @@ class App extends Component {
     // Clone
     const todos = [...this.state.todos];
 
-    const updatedTodos = todos.map(todo => {
-      if (todo.id === id) {
-        return { ...todo, isCompleted: !todo.isCompleted };
-      }
-      return todo;
+    const todo = todos.find(todo => todo.id === id);
+
+    todo.isCompleted = !todo.isCompleted;
+
+    // Update data
+    axios.put(`${this.apiUrl}/${id}`, todo).then(res => {
+      this.setState({ todos });
     });
-    // Update state
-    this.setState({ todos: updatedTodos });
   };
 
   render() {
