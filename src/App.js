@@ -68,11 +68,14 @@ class App extends Component {
                 <li
                   key={todo.id}
                   className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                  style={{
-                    textDecoration: todo.isCompleted ? 'line-through' : null
-                  }}
                 >
-                  {todo.text}
+                  <div
+                    style={{
+                      textDecoration: todo.isCompleted ? 'line-through' : null
+                    }}
+                  >
+                    {todo.text}
+                  </div>
                   <button className="btn btn-danger">
                     <i className="fas fa-minus-circle" />
                   </button>
