@@ -2,9 +2,9 @@ import React from 'react';
 
 function Title({ count }) {
   return (
-    <div>
-      <h1>Todo ({count})</h1>
-    </div>
+    <h1 className="display-5 mb-2">
+      Todo <span className="text-info">({count})</span>
+    </h1>
   );
 }
 

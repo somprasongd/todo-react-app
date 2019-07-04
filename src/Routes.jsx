@@ -10,9 +10,8 @@ const Routes = () => (
     <Switch>
       <Route path="/todos" component={Todo} />
       <Route path="/about" component={About} />
-      <Route path="/not-found" component={NotFound} />
       <Redirect from="/" exact to="/todos" />
-      <Redirect to="/not-found" />
+      <Route component={NotFound} />
     </Switch>
   </App>
 );
