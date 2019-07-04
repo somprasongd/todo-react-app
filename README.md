@@ -19,7 +19,7 @@ npm install gh-pages --save-dev
   "scripts": {
     //...
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build" // ถ้าต้องการ deploy จาก branch อื่น ใส่ -b branch-name ก่อน -d
+    "deploy": "gh-pages -d build" // ถ้าต้องการ deploy ไปที่ branch อื่น ใส่ -b branch-name ก่อน -d (default gh-pages)
   }
 }
 ```
