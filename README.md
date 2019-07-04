@@ -268,6 +268,30 @@ class CustomTextInput extends React.Component {
 }
 ```
 
+### ใช้ `<input ref={} />` ใน function components
+
+```jsx
+function Test(props) {
+  // Input tracker
+  let textInput;
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    // Access value
+    console.log(textInput.value);
+    // Clear input value
+    textInput.value = '';
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" ref={node => (textInput = node)} />
+      <button type="submit">Test</button>
+    </form>
+  );
+}
+```
+
 **เรื่องถัดไป** [Components](https://github.com/somprasongd/todo-react-app/tree/3-components)
 
 **เรื่องก่อนหน้า** [JSX](https://github.com/somprasongd/todo-react-app/tree/1-jsx)
