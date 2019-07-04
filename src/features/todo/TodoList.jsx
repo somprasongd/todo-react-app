@@ -2,7 +2,7 @@ import React from 'react';
 import TodoItem from './TodoItem';
 
 function TodoList(props) {
-  const { todos, onToggle, onDelete } = props;
+  const { todos } = props;
   return (
     <>
       {todos.length === 0 ? (
@@ -10,12 +10,7 @@ function TodoList(props) {
       ) : (
         <ul className="list-group">
           {todos.map(todo => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              onToggle={onToggle}
-              onDelete={onDelete}
-            />
+            <TodoItem key={todo.id} todo={todo} />
           ))}
         </ul>
       )}
