@@ -44,6 +44,6 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 **เรื่องถัดไป** [Life Cycle](https://github.com/somprasongd/todo-react-app/tree/4-lifecycle)
 
-**เรื่องก่อนหน้า** [JSX](https://github.com/somprasongd/todo-react-app/tree/2-events)
+**เรื่องก่อนหน้า** [Handling Events](https://github.com/somprasongd/todo-react-app/tree/2-events)
 
 **[หน้าแรก](https://github.com/somprasongd/todo-react-app)**
