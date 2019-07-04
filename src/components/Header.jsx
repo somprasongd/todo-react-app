@@ -6,7 +6,7 @@ function Header() {
     <nav className="navbar navbar-expand-sm navbar-light bg-light mb-3 py-0">
       <div className="container">
         <Link className="navbar-brand" to="/">
-          <i class="fas fa-tasks" /> Todo-list React
+          <i className="fas fa-tasks" /> Todo-list React
         </Link>
         <div>
           <div className="navbar-nav">
