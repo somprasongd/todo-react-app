@@ -1,5 +1,5 @@
 import React from 'react';
-import Todo from './Todo';
+import TodoItem from './TodoItem';
 
 function TodoList(props) {
   const { todos, onToggle, onDelete } = props;
@@ -10,7 +10,7 @@ function TodoList(props) {
       ) : (
         <ul className="list-group">
           {todos.map(todo => (
-            <Todo
+            <TodoItem
               key={todo.id}
               todo={todo}
               onToggle={onToggle}

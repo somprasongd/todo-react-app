@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Todo(props) {
+function TodoItem(props) {
   const { todo, onToggle, onDelete } = props;
   return (
     <li className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
@@ -19,4 +19,4 @@ function Todo(props) {
   );
 }
 
-export default Todo;
+export default TodoItem;
