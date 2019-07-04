@@ -10,6 +10,8 @@
 
 ### # [ES6 Refresher](https://github.com/somprasongd/todo-react-app#es6-refresher)
 
+### # [Concepts](https://github.com/somprasongd/todo-react-app/tree/0-concepts)
+
 ### # [JSX](https://github.com/somprasongd/todo-react-app/tree/1-jsx)
 
 ### # [Handling Events](https://github.com/somprasongd/todo-react-app/tree/2-events)
@@ -25,6 +27,8 @@
 ### # [Context API](https://github.com/somprasongd/todo-react-app/tree/7-context)
 
 ### # [Hooks](https://github.com/somprasongd/todo-react-app/tree/8-hooks)
+
+### # [Delpoyment](https://github.com/somprasongd/todo-react-app/tree/9-deploy)
 
 ## Development Tools
 
