@@ -1,103 +1,52 @@
-# HTTP Requests
+# Deployment
 
-เนื่องจาก React เป็นแค่ library สำหรับจัดการ UI เท่านั้น ดังนั้นการที่จะทำ HTTP request นั้น จำเป็นต้องใช้ library อื่นมาช่วย โดยในที่นี่จะใช้ [Axios](https://github.com/axios/axios)
+Deployment แบบต่างๆ ดูได้จาก <https://facebook.github.io/create-react-app/docs/deployment>
 
-## การติดตั้ง
+## ในที่นี่จะใช้ Github Pages
 
-- ผ่าน npm
+### Step 1: ติดตั้ง `gh-pages` ใน dev-dependency
 
-```bash
-$ npm install axios
+```unix
+npm install gh-pages --save-dev
 ```
 
-- หรือจะใช้ CDN ใส่ไว้ในไฟล์ public/index.html ก็ได้
+### Step 2: แก้ไขไฟล์ `package.json`
 
-```html
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-```
-
-## การใช้งาน
-
-### กำหนดค่าเริ่มต้น
-
-ต้องใช้ร่วมกับ Lifecycle method ชื่อ `componentDidMount`
-
-```jsx
-class TodoApp extends React.Component {
-  constructor(props) {
-    // Pass props to parent class
-    super(props);
-    // Set initial state
-    this.state = {
-      todos: []
-    };
-    this.apiUrl = 'https://5d1ac8b7dd81710014e87e54.mockapi.io/api/todos';
-  }
-  // Lifecycle method
-  componentDidMount() {
-    // Make HTTP reques with Axios
-    axios.get(this.apiUrl).then(res => {
-      // Set state with result
-      this.setState({ todos: res.data });
-    });
+```json
+{
+  // ...
+  "homepage": "http://git-username.github.io/repo-name",
+  "scripts": {
+    //...
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build" // ถ้าต้องการ deploy จาก branch อื่น ใส่ -b branch-name ก่อน -d
   }
 }
 ```
 
-### การเพิ่มข้อมูลใหม่
+### Step 3: สร้าง empty repository ใน GitHub
 
-```jsx
-// Add todo handler
-addTodo(val){
-  // Assemble data
-  const todo = {text: val, isCompleted: false}
-  // Update data
-  axios.post(this.apiUrl, todo)
-      .then((res) => {
-        const todos = [... this.state.todos];
-        todos.push(res.data);
-        this.setState({todos});
-      });
-}
+### Step 4: สร้าง git repository ใน app's folder
+
+```unix
+$ git init
+Initialized empty Git repository in C:/path/to/react-gh-pages/.git/
 ```
 
-### การแก้ไข
+### Step 5: เพิ่ม git remote
 
-```jsx
-// Update todo handler
-updateTodo(id){
-  // Clone
-  const todos = [...this.state.todos];
-
-  const todo = todos.find(todo => todo.id = id);
-
-  todo.isCompleted = !todo.isCompleted;
-
-  // Update data
-  axios.put(`${this.apiUrl}/${id}`, todo)
-      .then((res) => {
-        this.setState({todos});
-      });
-}
+```unix
+$ git remote add origin https://github.com/gitname/react-gh-pages.git
 ```
 
-### การลบ
+### Step 6: delpoy ไป GitHub Pages
 
-```jsx
-// Delete todo handler
-deleteTodo(id){
-  // Filter all todos except the one to be removed
-  const remainder = this.state.todos.filter(todo => todo.id !== id);
-  // Update state with filter
-  axios.delete(`${this.apiUrl}/${id}`)
-      .then((res) => {
-        this.setState({ todos: remainder });
-      });
-}
+```unix
+npm run deploy
 ```
 
-**เรื่องถัดไป** [Router](https://github.com/somprasongd/todo-react-app/tree/6-router)
+ทดสอบไปที่ `http://git-username.github.io/repo-name`
 
-**เรื่องก่อนหน้า** [Component Lifecycle](https://github.com/somprasongd/todo-react-app/tree/4-lifecycle)
+**เรื่องก่อนหน้า** [Hooks](https://github.com/somprasongd/todo-react-app/tree/8-hooks)
 
 **[หน้าแรก](https://github.com/somprasongd/todo-react-app)**
