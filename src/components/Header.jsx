@@ -13,6 +13,9 @@ function Header() {
             <NavLink className="nav-item nav-link" to="/todos">
               Todo
             </NavLink>
+            <NavLink className="nav-item nav-link" to="/dashboard">
+              Dashboard
+            </NavLink>
             <NavLink className="nav-item nav-link" to="/about">
               About
             </NavLink>

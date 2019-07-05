@@ -54,9 +54,11 @@ const Todo = () => {
   // Handle toggle complete
   const handleToggleComplete = id => {
     // Clone
-    const updateTodos = [todos];
+    const updateTodos = [...todos];
+    console.log(id, updateTodos);
 
     const todo = updateTodos.find(todo => todo.id === id);
+    console.log(todo);
 
     todo.isCompleted = !todo.isCompleted;
 

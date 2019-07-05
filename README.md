@@ -214,9 +214,38 @@ export default Clock;
 
 ## Custom Hooks
 
-## useReducer
+เราสามารถสร้าง custom hooks ใช้เองได้ เช่น การโหลดข้อมูลจาก api
 
-## useContext
+```jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const useHTTP = url => {
+  const [response, setResponse] = React.useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = React.useState(null);
+
+  useEffect(() => {
+    const fn = async () => {
+      try {
+        const res = await axios.get(url);
+        setResponse(res.data);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error);
+      }
+    };
+    fn();
+  }, [url]);
+  return { isLoading, response, error };
+};
+
+export default useHTTP;
+```
+
+## [useReducer](https://github.com/somprasongd/todo-react-app/tree/8-hooks-1-usereducer)
+
+## [useContext](https://github.com/somprasongd/todo-react-app/tree/8-hooks-1-usecontext)
 
 **เรื่องถัดไป** [Deployment](https://github.com/somprasongd/todo-react-app/tree/9-deploy)
 
