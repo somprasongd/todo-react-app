@@ -6,13 +6,13 @@ const About = () => {
     <div>
       <h1 className="display-4">About Page</h1>
 
-      <blockquote class="blockquote">
-        <p class="mb-0">
+      <blockquote className="blockquote">
+        <p className="mb-0">
           Show how to create Todo-list using react -> context api -> hooks
         </p>
-        <footer class="blockquote-footer">
+        <footer className="blockquote-footer">
           Read more{' '}
-          <cite title="Source Title">
+          <cite>
             <a
               href="https://github.com/somprasongd/todo-react-app"
               target="_blank"
