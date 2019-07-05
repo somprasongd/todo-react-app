@@ -4,11 +4,11 @@ import config from '../../config';
 import { Consumer } from '../../context';
 import { ADD_TODO } from '../../context/actionTypes';
 
-function TodoForm() {
+const TodoForm = () => {
   // Input tracker
   let textInput;
 
-  const handleSubmit = (e, dispatch) => {
+  const handleSubmit = async (e, dispatch) => {
     e.preventDefault();
 
     const text = textInput.value;
@@ -21,9 +21,9 @@ function TodoForm() {
     };
 
     // Update state
-    axios.post(config.apiUrl, todo).then(res => {
-      dispatch({ type: ADD_TODO, payload: res.data });
-    });
+    const res = await axios.post(config.apiUrl, todo);
+    dispatch({ type: ADD_TODO, payload: res.data });
+
     // Clear input value
     textInput.value = '';
   };
@@ -58,6 +58,6 @@ function TodoForm() {
       }}
     </Consumer>
   );
-}
+};
 
 export default TodoForm;

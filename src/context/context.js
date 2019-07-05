@@ -12,12 +12,11 @@ export default class Provider extends Component {
   };
 
   // Lifecycle method
-  componentDidMount() {
+  async componentDidMount() {
     // Make HTTP reques with Axios
-    axios.get(config.apiUrl).then(res => {
-      // Set state with result
-      this.setState({ todos: res.data });
-    });
+    const res = await axios.get(config.apiUrl);
+    // Set state with result
+    this.setState({ todos: res.data });
   }
 
   render() {

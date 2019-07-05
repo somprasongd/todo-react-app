@@ -4,7 +4,7 @@ import config from '../../config';
 import { Consumer } from '../../context';
 import { DELETE_TODO, UPDATE_TODO } from '../../context/actionTypes';
 
-function TodoItem(props) {
+const TodoItem = props => {
   const { todo } = props;
 
   // Handle remove
@@ -53,6 +53,6 @@ function TodoItem(props) {
       }}
     </Consumer>
   );
-}
+};
 
 export default TodoItem;
