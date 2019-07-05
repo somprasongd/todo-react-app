@@ -19,13 +19,6 @@ const reducer = (state, action) => {
         ...state,
         todos: state.todos.filter(todo => todo.id !== action.payload)
       };
-    case types.TOGGLE_TIME:
-      console.log(state);
-
-      return {
-        ...state,
-        isShowTime: !state.isShowTime
-      };
     default:
       return state;
   }

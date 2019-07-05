@@ -8,7 +8,6 @@ const AppContext = createContext({});
 export default class Provider extends Component {
   state = {
     todos: [],
-    isShowTime: false,
     dispatch: action => this.setState(state => reducer(state, action))
   };
 
