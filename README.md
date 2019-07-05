@@ -243,9 +243,17 @@ const useHTTP = url => {
 export default useHTTP;
 ```
 
-## [useReducer](https://github.com/somprasongd/todo-react-app/tree/8-hooks-1-usereducer)
+## useReducer
 
-## [useContext](https://github.com/somprasongd/todo-react-app/tree/8-hooks-1-usecontext)
+ถ้า state ของเรามีความซับซ้อนมากให้ใช้ `useReducer` จัดการกับ state จะง่ายกว่า ใช้ `useState`
+
+ตัวอย่างการใช้ [useReducer](https://github.com/somprasongd/todo-react-app/tree/8-hooks-1-usereducer)
+
+## useContext
+
+ใช้งาน Context API ง่ายๆ ด้วย `useContext`
+
+ตัวอย่างการใช้ [useContext](https://github.com/somprasongd/todo-react-app/tree/8-hooks-1-usecontext)
 
 **เรื่องถัดไป** [Deployment](https://github.com/somprasongd/todo-react-app/tree/9-deploy)
 
