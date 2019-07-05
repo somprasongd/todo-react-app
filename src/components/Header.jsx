@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import CountTodo from './CountTodo';
 
 function Header() {
   return (
@@ -11,7 +12,7 @@ function Header() {
         <div>
           <div className="navbar-nav">
             <NavLink className="nav-item nav-link" to="/todos">
-              Todo
+              Todo (<CountTodo />)
             </NavLink>
             <NavLink className="nav-item nav-link" to="/dashboard">
               Dashboard

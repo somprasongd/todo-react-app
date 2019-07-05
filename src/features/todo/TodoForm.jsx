@@ -1,18 +1,36 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import axios from 'axios';
+import config from '../../config';
+import { AppContext } from '../../context';
+import { ADD_TODO } from '../../context/actionTypes';
 
-function TodoForm({ onAdd }) {
-  // Input tracker
-  let textInput;
+const TodoForm = () => {
+  const { dispatch } = useContext(AppContext);
 
-  const handleSubmit = e => {
+  const [value, setValue] = useState('');
+
+  const handleSubmit = async (e, dispatch) => {
     e.preventDefault();
-    onAdd(textInput.value);
+
+    const text = value;
+    if (text.length === 0) return;
+
+    // Assemble data
+    const todo = {
+      text,
+      isCompleted: false
+    };
+
+    // Update state
+    const res = await axios.post(config.apiUrl, todo);
+    dispatch({ type: ADD_TODO, payload: res.data });
+
     // Clear input value
-    textInput.value = '';
+    setValue('');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={e => handleSubmit(e, dispatch)}>
       <div className="form-row align-items-center">
         <div className="col">
           <label className="sr-only" htmlFor="inlineFormInput">
@@ -20,7 +38,8 @@ function TodoForm({ onAdd }) {
           </label>
           <input
             type="text"
-            ref={node => (textInput = node)}
+            onChange={e => setValue(e.target.value)}
+            value={value}
             className="form-control mb-2"
             id="inlineFormInput"
             placeholder="What needs to be done?"
@@ -34,6 +53,6 @@ function TodoForm({ onAdd }) {
       </div>
     </form>
   );
-}
+};
 
 export default TodoForm;
