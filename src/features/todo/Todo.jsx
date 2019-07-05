@@ -34,7 +34,7 @@ const Todo = () => {
     // Update state
     axios.post(apiUrl, todo).then(res => {
       // Clone & Update data
-      const newTodos = [todos];
+      const newTodos = [...todos];
       newTodos.push(res.data);
 
       setTodos(newTodos);

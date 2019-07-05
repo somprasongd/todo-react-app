@@ -253,7 +253,7 @@ export default useHTTP;
 
 ใช้งาน Context API ง่ายๆ ด้วย `useContext`
 
-ตัวอย่างการใช้ [useContext](https://github.com/somprasongd/todo-react-app/tree/8-hooks-1-usecontext)
+ตัวอย่างการใช้ [useContext](https://github.com/somprasongd/todo-react-app/tree/8-hooks-2-usecontext)
 
 **เรื่องถัดไป** [Deployment](https://github.com/somprasongd/todo-react-app/tree/9-deploy)
 
