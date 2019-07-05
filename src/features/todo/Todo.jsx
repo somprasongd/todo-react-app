@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import Title from './Title';
 import TodoForm from './TodoForm';
@@ -6,20 +6,51 @@ import TodoList from './TodoList';
 import Clock from '../../components/Clock';
 
 const apiUrl = 'https://5d1ac8b7dd81710014e87e54.mockapi.io/api/todos';
+
+const SET_TODO = 'SET_TODO';
+const ADD_TODO = 'ADD_TODO';
+const DELELE_TODO = 'DELELE_TODO';
+const UPDATE_TODO = 'UPDATE_TODO';
+const TOGGLE_TIME = 'TOGGLE_TIME';
+
+function reducer(state, action) {
+  switch (action.type) {
+    case SET_TODO:
+      return { ...state, todos: action.payload };
+    case ADD_TODO:
+      return { ...state, todos: [...state.todos, action.payload] };
+    case DELELE_TODO:
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.id !== action.payload)
+      };
+    case UPDATE_TODO:
+      return {
+        ...state,
+        todos: state.todos.map(todo =>
+          todo.id === action.payload.id ? (todo = action.payload) : todo
+        )
+      };
+    case TOGGLE_TIME:
+      return { ...state, isShowTime: !state.isShowTime };
+    default:
+      return state;
+  }
+}
 const Todo = () => {
-  const [todos, setTodos] = useState([]);
-  const [isShowTime, setIsShowTime] = useState(false);
+  const [state, dispatch] = useReducer(reducer, {
+    todos: [],
+    isShowTime: false
+  });
 
   useEffect(() => {
     axios.get(apiUrl).then(res => {
-      // Set state with result
-      setTodos(res.data);
+      dispatch({
+        type: SET_TODO,
+        payload: res.data
+      });
     });
-  }, [setTodos]);
-
-  const count = todos => {
-    return todos.reduce((a, c) => a + (c.isCompleted ? 0 : 1), 0);
-  };
+  }, [dispatch]);
 
   // Add todo handler
   const handleAdd = text => {
@@ -33,58 +64,61 @@ const Todo = () => {
 
     // Update state
     axios.post(apiUrl, todo).then(res => {
-      // Clone & Update data
-      const newTodos = [todos];
-      newTodos.push(res.data);
-
-      setTodos(newTodos);
+      dispatch({
+        type: ADD_TODO,
+        payload: res.data
+      });
     });
   };
 
   // Handle remove
   const handleRemove = id => {
-    // Filter all todos except the one to be removed
-    const remainder = todos.filter(todo => todo.id !== id);
     // Update state with filter
     axios.delete(`${apiUrl}/${id}`).then(res => {
-      setTodos(remainder);
+      dispatch({
+        type: DELELE_TODO,
+        payload: id
+      });
     });
   };
 
   // Handle toggle complete
-  const handleToggleComplete = id => {
-    // Clone
-    const updateTodos = [...todos];
-    console.log(id, updateTodos);
-
-    const todo = updateTodos.find(todo => todo.id === id);
-    console.log(todo);
-
+  const handleToggleComplete = todo => {
     todo.isCompleted = !todo.isCompleted;
 
     // Update data
-    axios.put(`${apiUrl}/${id}`, todo).then(res => {
-      setTodos(updateTodos);
+    axios.put(`${apiUrl}/${todo.id}`, todo).then(res => {
+      dispatch({
+        type: UPDATE_TODO,
+        payload: todo
+      });
     });
   };
 
-  const countUncompleted = count(todos);
+  const countUncompleted = state.todos.reduce(
+    (a, c) => a + (c.isCompleted ? 0 : 1),
+    0
+  );
   return (
     <Fragment>
       <Title count={countUncompleted} />
       <TodoForm onAdd={handleAdd} />
       <TodoList
-        todos={todos}
+        todos={state.todos}
         onToggle={handleToggleComplete}
         onDelete={handleRemove}
       />
       <div className="m-2">
-        {isShowTime && <Clock />}
+        {state.isShowTime && <Clock />}
         <button
           className="btn btn-info"
-          onClick={e => setIsShowTime(!isShowTime)}
+          onClick={e =>
+            dispatch({
+              type: TOGGLE_TIME
+            })
+          }
         >
-          {isShowTime ? 'Hide' : 'Show'}
+          {state.isShowTime ? 'Hide' : 'Show'}
         </button>
       </div>
     </Fragment>

@@ -8,7 +8,7 @@ function TodoItem(props) {
         style={{
           textDecoration: todo.isCompleted ? 'line-through' : null
         }}
-        onClick={e => onToggle(todo.id)}
+        onClick={e => onToggle(todo)}
       >
         {todo.text}
       </div>
