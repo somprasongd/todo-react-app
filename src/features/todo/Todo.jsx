@@ -1,33 +1,28 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import axios from 'axios';
 import Title from './Title';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 import Clock from '../../components/Clock';
 
-export default class Todo extends Component {
-  constructor() {
-    super();
-    // Set initial state
-    this.state = { todos: [], isShowTime: false };
-    this.apiUrl = 'https://5d1ac8b7dd81710014e87e54.mockapi.io/api/todos';
-  }
+const apiUrl = 'https://5d1ac8b7dd81710014e87e54.mockapi.io/api/todos';
+const Todo = () => {
+  const [todos, setTodos] = useState([]);
+  const [isShowTime, setIsShowTime] = useState(false);
 
-  // Lifecycle method
-  componentDidMount() {
-    // Make HTTP reques with Axios
-    axios.get(this.apiUrl).then(res => {
+  useEffect(() => {
+    axios.get(apiUrl).then(res => {
       // Set state with result
-      this.setState({ todos: res.data });
+      setTodos(res.data);
     });
-  }
+  }, [setTodos]);
 
-  count(todos) {
+  const count = todos => {
     return todos.reduce((a, c) => a + (c.isCompleted ? 0 : 1), 0);
-  }
+  };
 
   // Add todo handler
-  handleAdd = text => {
+  const handleAdd = text => {
     if (text.length === 0) return;
 
     // Assemble data
@@ -37,62 +32,61 @@ export default class Todo extends Component {
     };
 
     // Update state
-    axios.post(this.apiUrl, todo).then(res => {
+    axios.post(apiUrl, todo).then(res => {
       // Clone & Update data
-      const todos = [...this.state.todos];
-      todos.push(res.data);
+      const newTodos = [todos];
+      newTodos.push(res.data);
 
-      this.setState({ todos });
+      setTodos(newTodos);
     });
   };
 
   // Handle remove
-  handleRemove = id => {
+  const handleRemove = id => {
     // Filter all todos except the one to be removed
-    const remainder = this.state.todos.filter(todo => todo.id !== id);
+    const remainder = todos.filter(todo => todo.id !== id);
     // Update state with filter
-    axios.delete(`${this.apiUrl}/${id}`).then(res => {
-      this.setState({ todos: remainder });
+    axios.delete(`${apiUrl}/${id}`).then(res => {
+      setTodos(remainder);
     });
   };
 
   // Handle toggle complete
-  handleToggleComplete = id => {
+  const handleToggleComplete = id => {
     // Clone
-    const todos = [...this.state.todos];
+    const updateTodos = [todos];
 
-    const todo = todos.find(todo => todo.id === id);
+    const todo = updateTodos.find(todo => todo.id === id);
 
     todo.isCompleted = !todo.isCompleted;
 
     // Update data
-    axios.put(`${this.apiUrl}/${id}`, todo).then(res => {
-      this.setState({ todos });
+    axios.put(`${apiUrl}/${id}`, todo).then(res => {
+      setTodos(updateTodos);
     });
   };
 
-  render() {
-    const { todos, isShowTime } = this.state;
-    const countUncompleted = this.count(todos);
-    return (
-      <Fragment>
-        <Title count={countUncompleted} />
-        <TodoForm onAdd={this.handleAdd} />
-        <TodoList
-          todos={todos}
-          onToggle={this.handleToggleComplete}
-          onDelete={this.handleRemove}
-        />
-        <div className="m-2">
-          {isShowTime && <Clock />}
-          <button
-            className="btn btn-info"
-            onClick={e => this.setState({ isShowTime: !isShowTime })}
-          >
-            {isShowTime ? 'Hide' : 'Show'}
-          </button>
-        </div>
-      </Fragment>
-    );
-  }
-}
+  const countUncompleted = count(todos);
+  return (
+    <Fragment>
+      <Title count={countUncompleted} />
+      <TodoForm onAdd={handleAdd} />
+      <TodoList
+        todos={todos}
+        onToggle={handleToggleComplete}
+        onDelete={handleRemove}
+      />
+      <div className="m-2">
+        {isShowTime && <Clock />}
+        <button
+          className="btn btn-info"
+          onClick={e => setIsShowTime(!isShowTime)}
+        >
+          {isShowTime ? 'Hide' : 'Show'}
+        </button>
+      </div>
+    </Fragment>
+  );
+};
+
+export default Todo;
