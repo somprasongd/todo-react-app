@@ -24,22 +24,35 @@ npm install gh-pages --save-dev
 }
 ```
 
-### Step 3: สร้าง empty repository ใน GitHub
+### Step 3: แก้ไขไฟล์ `src/index.js`
 
-### Step 4: สร้าง git repository ใน app's folder
+เพิ่ม basename ซึ่งตรงนี้ถ้าใช้จาก `process.env.PUBLIC_URL` จะไม่มีผลกับ development [เพิ่มเติม](https://medium.com/@svinkle/how-to-deploy-a-react-app-to-a-subdirectory-f694d46427c1)
+
+```jsx
+ReactDOM.render(
+  <Router basename={`${process.env.PUBLIC_URL}`}>
+    <Routes />
+  </Router>,
+  document.getElementById('root')
+);
+```
+
+### Step 4: สร้าง empty repository ใน GitHub
+
+### Step 5: สร้าง git repository ใน app's folder
 
 ```unix
 $ git init
 Initialized empty Git repository in C:/path/to/react-gh-pages/.git/
 ```
 
-### Step 5: เพิ่ม git remote
+### Step 6: เพิ่ม git remote
 
 ```unix
 $ git remote add origin https://github.com/gitname/react-gh-pages.git
 ```
 
-### Step 6: delpoy ไป GitHub Pages
+### Step 7: delpoy ไป GitHub Pages
 
 ```unix
 npm run deploy
